@@ -1,0 +1,3 @@
+creditor 1002 0
+creditor 1003 0
+creditor 1004 0
