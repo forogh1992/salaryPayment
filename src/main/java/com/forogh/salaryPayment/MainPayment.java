@@ -1,22 +1,23 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+package com.forogh.salaryPayment;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
+
 public class MainPayment {
-
-    public static class Account {
-        static File debtorFile = new File("debtor.txt");
-        static File creditorFile = new File("creditor.txt");
-        static File transactionFile = new File("transaction.txt");
-        static File updateDebtor = new File("updateDebtor.txt");
-        static File updateCreditor = new File("updateCreditor.txt");
-
 
         public static void main(String[] args) throws IOException {
 
-/* read debtor file and balance*/
+            File debtorFile = new File("src/main/resources/debtor.txt");
+            File creditorFile = new File("src/main/resources/creditor.txt");
+            File transactionFile = new File("src/main/resources/transaction.txt");
+            File updateDebtor = new File("src/main/resources/updateDebtor.txt");
+            File updateCreditor = new File("src/main/resources/updateCreditor.txt");
+
+
+            /* read debtor file and balance*/
             Scanner s = new Scanner(System.in);
             Scanner s1 = new Scanner(debtorFile);
             int debBalance = 0;
@@ -27,8 +28,7 @@ public class MainPayment {
                 depositNumber = x[1];
             }
 
-
-/* transfer */
+            /* transfer */
             int i = 3;
             Scanner sc = new Scanner(creditorFile);
             ArrayList al = new ArrayList();
@@ -47,7 +47,7 @@ public class MainPayment {
             }
 
 
-/* Update Files*/
+            /* Update Files*/
             FileWriter fw = new FileWriter(transactionFile);
             for (int k = 0; k < al.size(); k++) {
 
@@ -68,10 +68,6 @@ public class MainPayment {
                 fw3.write("creditor" + " " + "100" + m + " " + x[2] + "\n");
             }
             fw3.close();
-
-
         }
-
-
     }
-}
+
