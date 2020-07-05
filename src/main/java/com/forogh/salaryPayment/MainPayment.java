@@ -23,7 +23,7 @@ public class MainPayment {
         int debBalance = 0;
         String depositNumber = "";
         while (s1.hasNextLine()) {
-            String[] x = s1.nextLine().split(" ");
+           String[] x = s1.nextLine().split(" ");
             debBalance = Integer.parseInt(x[2]);
             depositNumber = x[1];
         }
