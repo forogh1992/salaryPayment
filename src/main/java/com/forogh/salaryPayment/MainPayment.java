@@ -2,72 +2,150 @@ package com.forogh.salaryPayment;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static com.sun.org.apache.bcel.internal.util.SecuritySupport.getResourceAsStream;
 
 public class MainPayment {
 
+
+    final private String ALL_INFO = "src\\main\\AllInfo.txt";
+    final private String BALANCE = "src\\main\\Balance.txt";
+    final private String TRANSACTIONS = "src\\main\\Transaction.txt";
+    private static File allInfo;
+    private static File balance;
+    private static File transactions;
+
+    private static Scanner sc = new Scanner(System.in);
+    private static String debtorID = "";
+
     public static void main(String[] args) throws IOException {
 
-        File debtorFile = new File("src/main/resources/debtor.txt");
-        File creditorFile = new File("src/main/resources/creditor.txt");
-        File transactionFile = new File("src/main/resources/transaction.txt");
-        File updateDebtor = new File("src/main/resources/updateDebtor.txt");
-        File updateCreditor = new File("src/main/resources/updateCreditor.txt");
 
-
-        /* read debtor file and balance*/
-        Scanner s = new Scanner(System.in);
-        Scanner s1 = new Scanner(debtorFile);
-        int debBalance = 0;
-        String depositNumber = "";
-        while (s1.hasNextLine()) {
-           String[] x = s1.nextLine().split(" ");
-            debBalance = Integer.parseInt(x[2]);
-            depositNumber = x[1];
-        }
-
-        /* transfer */
-        int i = 3;
-        Scanner sc = new Scanner(creditorFile);
-        ArrayList al = new ArrayList();
-        sc.close();
-
-        for (int j = 0; j < i; j++) {
-            int p = j + 1;
-            System.out.println("Enter Amount for Account 100" + p);
-            int transAmount = s.nextInt();
-            if (debBalance >= transAmount) {
-                al.add(depositNumber + " " + "100" + p + " " + transAmount);
-                debBalance -= transAmount;
-
-            } else
-                throw new ArithmeticException("Balance is not enough");
+        MainPayment mainPayment = new MainPayment();
+        try {
+            mainPayment.initFiles();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.exit(-1);
         }
 
 
-        /* Update Files*/
-        FileWriter fw = new FileWriter(transactionFile);
-        for (int k = 0; k < al.size(); k++) {
+        System.out.println("Please enter debtor's ID");
+        debtorID = sc.nextLine();
+        System.out.println("Please enter creditor's ID");
+        String creditorID = sc.nextLine();
+        System.out.println("Please enter amount");
+        long amount = sc.nextLong();
+        Creditor from = mainPayment.getPerson(debtorID);
+        Creditor to = mainPayment.getPerson(creditorID);
+        Transaction transaction = new Transaction(from, to, amount);
+        String result = mainPayment.transfer(transaction);
+        System.out.println(result);
 
-            fw.write(al.get(k) + "\n");
-        }
-        fw.close();
-
-
-        FileWriter fw2 = new FileWriter(updateDebtor);
-        fw2.write("debtor" + " " + depositNumber + " " + debBalance + "\n");
-        fw2.close();
-
-
-        FileWriter fw3 = new FileWriter(updateCreditor);
-        for (int l = 0; l < i; l++) {
-            String[] x = al.get(l).toString().split(" ");
-            int m = l + 1;
-            fw3.write("creditor" + " " + "100" + m + " " + x[2] + "\n");
-        }
-        fw3.close();
     }
+
+    String transfer(Transaction transaction) throws IOException {
+        long amount = transaction.getAmount();
+        if (transaction.getFrom().getBalance() < transaction.getAmount()) {
+            return "moojoodi kafi nist";
+        } else {
+            transaction.getFrom().withdrawal(amount);
+            transaction.getTo().deposit(amount);
+            updateBalance(transaction.getFrom());
+            updateBalance(transaction.getTo());
+            writeTransaction(transaction);
+            return "success";
+        }
+    }
+
+
+    void updateBalance(Creditor person) throws IOException {
+        HashMap<String, String> data = readAllBalances();
+        data.put(person.getId(), String.valueOf(person.getBalance()));
+        FileWriter fileWriter = new FileWriter(balance);
+        ArrayList<String> list = new ArrayList<>();
+        data.forEach((s, s2) -> {
+            list.add(s + " " + s2);
+        });
+
+        for (int i = list.size() - 1; i > -1; i--) {
+            try {
+                fileWriter.write(list.get(i) + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        fileWriter.flush();
+        fileWriter.close();
+    }
+
+    HashMap<String, String> readAllBalances() throws FileNotFoundException {
+        HashMap<String, String> result = new HashMap<>();
+        Scanner scanner = new Scanner(balance);
+        String[] data;
+        while (scanner.hasNextLine()) {
+            data = scanner.nextLine().split(" ");
+            result.put(data[0], data[1]);
+        }
+        return result;
+    }
+
+    void writeTransaction(Transaction transaction) throws IOException {
+        FileWriter fileWriter = new FileWriter(transactions, true);
+        fileWriter.append(transaction.getFrom().getId() +
+                " " +
+                transaction.getTo().getId() +
+                " " +
+                transaction.getAmount() +
+                "\n");
+
+        fileWriter.flush();
+        fileWriter.close();
+    }
+
+
+    void initFiles() throws IOException {
+        allInfo = new File(ALL_INFO);
+        if (!allInfo.exists())
+            allInfo.createNewFile();
+
+        balance = new File(BALANCE);
+        if (!balance.exists()) {
+            balance.createNewFile();
+
+            Scanner scanner = new Scanner(allInfo);
+            FileWriter fileWriter = new FileWriter(balance);
+
+            String[] data;
+            while (scanner.hasNextLine()) {
+                data = scanner.nextLine().split(" ");
+                fileWriter.write(data[1] + " " + data[2] + "\n");
+                fileWriter.flush();
+            }
+            fileWriter.close();
+            scanner.close();
+        }
+
+        transactions = new File(TRANSACTIONS);
+        if (!transactions.exists())
+            transactions.createNewFile();
+
+
+    }
+
+    Creditor getPerson(String ID) throws FileNotFoundException {
+        Creditor person;
+        long balance;
+        balance = Long.parseLong(readAllBalances().get(ID));
+        if (ID.equals(debtorID))
+            person = new Creditor(ID, balance, "debtor");
+        else
+            person = new Creditor(ID, balance, "creditor");
+        return person;
+
+    }
+
 }
 
