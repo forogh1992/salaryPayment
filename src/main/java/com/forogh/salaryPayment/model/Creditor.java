@@ -3,13 +3,13 @@ package com.forogh.salaryPayment;
 public class Creditor {
 
 
-
     private String id;
     private long balance;
     private String type;
 
 
     public void withdrawal(long amount) {
+
         setBalance(getBalance() - amount);
     }
 
