@@ -1,4 +1,4 @@
-package com.forogh.salaryPayment;
+package com.forogh.salaryPayment.model;
 
 public class Creditor {
 

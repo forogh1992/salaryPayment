@@ -1,4 +1,6 @@
-package com.forogh.salaryPayment;
+package com.forogh.salaryPayment.model;
+
+import com.forogh.salaryPayment.model.Creditor;
 
 public class Transaction {
 

@@ -1,5 +1,8 @@
 package com.forogh.salaryPayment;
 
+import com.forogh.salaryPayment.model.Creditor;
+import com.forogh.salaryPayment.model.Transaction;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
