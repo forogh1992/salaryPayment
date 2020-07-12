@@ -9,8 +9,9 @@ import java.util.logging.Logger;
 
 public class DebtorDal {
 
-    private static final String src = "src/com/forogh/example/debtor.txt";
+    private static final String src = "src/main/resources/debtor.txt";
     private static final Path path = Paths.get(src);
+//    com/forogh/salaryPayment
 
     public DebtorDal() {
         try {
@@ -38,10 +39,10 @@ public class DebtorDal {
         try {
 
             List<String> list = Files.readAllLines(path);
-            Files.write(path,Integer.toString(integer).getBytes());
+            Files.write(path, Integer.toString(integer).getBytes());
 
             return true;
-        } catch (IOException ex){
+        } catch (IOException ex) {
             Logger.getLogger(DebtorDal.class.getName());
             ex.printStackTrace();
             return false;

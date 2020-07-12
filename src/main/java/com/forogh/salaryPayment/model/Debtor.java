@@ -1,18 +1,9 @@
 package com.forogh.salaryPayment.model;
 
-public class Creditor {
+public class Debtor {
 
-    private Boolean creditor_debtor;
     private Integer depositNumber;
     private Integer amount;
-
-    public Boolean getCreditor_debtor() {
-        return creditor_debtor;
-    }
-
-    public void setCreditor_debtor(Boolean creditor_debtor) {
-        this.creditor_debtor = creditor_debtor;
-    }
 
     public Integer getDepositNumber() {
         return depositNumber;

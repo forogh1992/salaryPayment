@@ -1,29 +1,33 @@
 package com.forogh.salaryPayment.model;
 
-import com.forogh.salaryPayment.model.Creditor;
 
 public class Transaction {
 
+    private Integer debtorDepositNumber;
+    private Integer creditorDepositNumber;
+    private Integer amount;
 
-    private Creditor from;
-    private Creditor to;
-    private long amount;
-
-    public Transaction(Creditor from, Creditor to, long amount) {
-        this.from = from;
-        this.to = to;
-        this.amount = amount;
+    public Integer getDebtorDepositNumber() {
+        return debtorDepositNumber;
     }
 
-    public Creditor getFrom() {
-        return from;
+    public void setDebtorDepositNumber(Integer debtorDepositNumber) {
+        this.debtorDepositNumber = debtorDepositNumber;
     }
 
-    public Creditor getTo() {
-        return to;
+    public Integer getCreditorDepositNumber() {
+        return creditorDepositNumber;
     }
 
-    public long getAmount() {
+    public void setCreditorDepositNumber(Integer creditorDepositNumber) {
+        this.creditorDepositNumber = creditorDepositNumber;
+    }
+
+    public Integer getAmount() {
         return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
     }
 }
