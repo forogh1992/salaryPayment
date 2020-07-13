@@ -11,7 +11,7 @@ public class DebtorDal {
 
     private static final String src = "src/main/resources/debtor.txt";
     private static final Path path = Paths.get(src);
-//    com/forogh/salaryPayment
+
 
     public DebtorDal() {
         try {
@@ -35,7 +35,7 @@ public class DebtorDal {
         }
     }
 
-    public boolean getDebitAmount(Integer integer) {
+    public boolean getDebtAmount(Integer integer) {
         try {
 
             List<String> list = Files.readAllLines(path);

@@ -31,7 +31,7 @@ public class CreditorDal {
 
     public void setInitCreditor() {
         try {
-            for (Integer i = 0; i < integer; i++) {
+            for (Integer i = 1; i <= integer; i++) {
                 Random r = new Random();
                 Integer am = r.nextInt(20000);
                 String fil = i.toString() + " " + am.toString() + "\n";
