@@ -1,9 +1,12 @@
 package com.forogh.salaryPayment.service;
 
+import com.forogh.salaryPayment.model.Debtor;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -16,34 +19,42 @@ public class DebtorDal {
     public DebtorDal() {
         try {
             if (!Files.exists(path)) {
-                Files.write(path, "60000000000".getBytes());
+                String s = "101 600000000" + "\n";
+                Files.write(path, s.getBytes());
+            } else {
+                Files.delete(path);
+                String s = "101 600000000" + "\n";
+                Files.write(path, s.getBytes());
             }
         } catch (IOException ex) {
-            Logger.getLogger(DebtorDal.class.getName());
+            Logger.getLogger(DebtorDal.class.getName(), ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-    public boolean setDebtorAmount(Integer integer) throws IOException {
+    public Debtor getAmountDebt() {
+        Debtor debtor = new Debtor();
         try {
-            Files.write(path, Integer.toString(integer).getBytes());
-            return true;
+            List<String> lines = Files.readAllLines(path);
+            for (int i = lines.size() - 1; i > lines.size() - 2; i--) {
+                String[] s = lines.get(i).split(" ");
+                debtor.setDepositNumber(Integer.parseInt(s[0]));
+                debtor.setAmount(Integer.parseInt(s[1]));
+                System.out.println(debtor.getDepositNumber() + " " + debtor.getAmount());
+            }
         } catch (IOException ex) {
-            Logger.getLogger(DebtorDal.class.getName());
+            Logger.getLogger(DebtorDal.class.getName(), ex.getMessage());
             ex.printStackTrace();
-            return false;
         }
+        return debtor;
     }
 
-    public boolean getDebtAmount(Integer integer) {
+    public Boolean setMinosAmountDebt(Debtor debtor) {
         try {
-
-            List<String> list = Files.readAllLines(path);
-            Files.write(path, Integer.toString(integer).getBytes());
-
+            String s = debtor.getDepositNumber() + " " + debtor.getAmount()+"\n";
+            Files.write(path, s.getBytes());
             return true;
-        } catch (IOException ex) {
-            Logger.getLogger(DebtorDal.class.getName());
+        } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }
