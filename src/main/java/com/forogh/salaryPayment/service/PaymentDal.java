@@ -1,8 +1,9 @@
 package com.forogh.salaryPayment.service;
 
-import com.forogh.salaryPayment.model.Creditor;
+import com.forogh.salaryPayment.model.Payment;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,58 +11,57 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
-public class CreditorDal {
+public class PaymentDal {
 
-    private static final String src = "src/main/resources/creditor.txt";
+    private static final String src = "src/main/java/com/forogh/salaryPayment/files/payment.txt";
     private static final Path path = Paths.get(src);
     private static Integer integer = 20;
+    private static final Logger log = Logger.getLogger(DepositDal.class.getName());
 
-    public CreditorDal() throws IOException {
+    public PaymentDal() throws IOException {
         try {
-            if (!Files.exists(path)) {
-                Files.createFile(path);
-            } else {
+            if (Files.exists(path)) {
                 Files.delete(path);
-                Files.createFile(path);
             }
+            Files.createFile(path);
         } catch (IOException ex) {
-           /* Logger.getLogger(CreditorDal.class.getName());
-            System.out.println(ex.getMessage());*/
+            log.error(ex.getMessage());
             ex.printStackTrace();
         }
     }
+
 
     public void setInitCreditor() {
         try {
             for (Integer i = 0; i < integer; i++) {
                 Random r = new Random();
                 Integer am = r.nextInt(20000);
-                String fil = i.toString() + " " + am.toString() + "\n";
+                String fil = ("10" + i.toString() + " " + am.toString() + "\n");
                 Files.write(path, fil.getBytes(), StandardOpenOption.APPEND);
             }
         } catch (IOException ex) {
-            Logger.getLogger(CreditorDal.class.getName(), ex.getMessage());
+            log.error(ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-    public List<Creditor> getAllCreditorAccount() {
-        List<Creditor> list = new ArrayList<>();
+    public List<Payment> getAllCreditorAccount() {
+        List<Payment> list = new ArrayList<>();
         try {
             List<String> lines = Files.readAllLines(path);
             for (String s1 : lines) {
                 String[] s2 = s1.split(" ");
-                Creditor creditor = new Creditor();
-                creditor.setDepositNumber(Integer.parseInt(s2[0]));
-                creditor.setAmount(Integer.parseInt(s2[1]));
-                list.add(creditor);
+                Payment payment = new Payment();
+                payment.setDepositNumber((s2[0]));
+                payment.setAmount(BigDecimal.valueOf(Long.parseLong(s2[1])));
+                list.add(payment);
             }
         } catch (IOException ex) {
-            ex.getMessage();
+            log.error(ex.getMessage());
+            ex.printStackTrace();
         }
         return list;
     }
-
 }

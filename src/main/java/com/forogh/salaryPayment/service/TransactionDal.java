@@ -7,36 +7,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
 
 public class TransactionDal {
 
-    private static final String src = "src/main/resources/transaction.txt";
+    private static final String src = "src/main/java/com/forogh/salaryPayment/files/transaction.txt";
     private static final Path path = Paths.get(src);
+    private static final Logger log = Logger.getLogger(DepositDal.class.getName());
+
 
     public TransactionDal() {
         try {
-            if (!Files.exists(path)) {
-                Files.createFile(path);
-            } else {
+            if (Files.exists(path)) {
                 Files.delete(path);
-                Files.createFile(path);
             }
+            Files.createFile(path);
         } catch (IOException ex) {
-            Logger.getLogger(CreditorDal.class.getName(), ex.getMessage());
+            log.error(ex.getMessage());
             ex.printStackTrace();
         }
     }
 
-    public boolean saveTransAction(Transaction transAction) {
+    public void saveTransAction(Transaction transAction) {
         try {
             String s = transAction.getDebtorDepositNumber() + " " + transAction.getCreditorDepositNumber() + " " + transAction.getAmount()+"\n";
             Files.write(path, s.getBytes(), StandardOpenOption.APPEND);
-            return true;
         } catch (IOException ex) {
+            log.error(ex.getMessage());
             ex.printStackTrace();
-            ex.getMessage();
-            return false;
         }
     }
 }

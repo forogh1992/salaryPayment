@@ -1,33 +1,35 @@
 package com.forogh.salaryPayment.model;
 
 
+import java.math.BigDecimal;
+
 public class Transaction {
 
-    private Integer debtorDepositNumber;
-    private Integer creditorDepositNumber;
-    private Integer amount;
+    private String debtorDepositNumber;
+    private String creditorDepositNumber;
+    private BigDecimal amount;
 
-    public Integer getDebtorDepositNumber() {
+    public String getDebtorDepositNumber() {
         return debtorDepositNumber;
     }
 
-    public void setDebtorDepositNumber(Integer debtorDepositNumber) {
+    public void setDebtorDepositNumber(String debtorDepositNumber) {
         this.debtorDepositNumber = debtorDepositNumber;
     }
 
-    public Integer getCreditorDepositNumber() {
+    public String getCreditorDepositNumber() {
         return creditorDepositNumber;
     }
 
-    public void setCreditorDepositNumber(Integer creditorDepositNumber) {
+    public void setCreditorDepositNumber(String creditorDepositNumber) {
         this.creditorDepositNumber = creditorDepositNumber;
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 }

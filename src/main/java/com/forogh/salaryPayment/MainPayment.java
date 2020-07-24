@@ -1,34 +1,36 @@
 package com.forogh.salaryPayment;
 
-import com.forogh.salaryPayment.model.Creditor;
-import com.forogh.salaryPayment.model.Debtor;
+import com.forogh.salaryPayment.model.Payment;
+import com.forogh.salaryPayment.model.Deposit;
 import com.forogh.salaryPayment.model.Transaction;
-import com.forogh.salaryPayment.service.CreditorDal;
-import com.forogh.salaryPayment.service.DebtorDal;
+import com.forogh.salaryPayment.service.PaymentDal;
+import com.forogh.salaryPayment.service.DepositDal;
 import com.forogh.salaryPayment.service.TransactionDal;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class MainPayment {
 
     public static void main(String[] args) throws IOException {
 
-        DebtorDal debtorDal = new DebtorDal();
-        CreditorDal creditorDal = new CreditorDal();
-        creditorDal.setInitCreditor();
+        DepositDal depositDal = new DepositDal();
+        PaymentDal paymentDal = new PaymentDal();
+        paymentDal.setInitCreditor();
         TransactionDal transactionDal = new TransactionDal();
 
-        List<Creditor> list = creditorDal.getAllCreditorAccount();
-        for (Creditor c : list) {
+        List<Payment> list = paymentDal.getAllCreditorAccount();
+        for (Payment c : list) {
+
             Transaction transaction = new Transaction();
-            Debtor debtor = debtorDal.getAmountDebt();
-            Integer ex = c.getAmount();
-            debtor.setAmount(debtor.getAmount() - ex);
-//            debtor.setDepositNumber(debtor.getDepositNumber() + 1);
-            debtorDal.setMinosAmountDebt(debtor);
+            Deposit deposit = depositDal.getAmountDebt();
+            BigDecimal ex = c.getAmount();
+            deposit.setAmount(deposit.getAmount().subtract(ex));
+            depositDal.setMinosAmountDebt(deposit);
+
+            transaction.setDebtorDepositNumber(deposit.getDepositNumber());
             transaction.setCreditorDepositNumber(c.getDepositNumber());
-            transaction.setDebtorDepositNumber(debtor.getDepositNumber());
             transaction.setAmount(c.getAmount());
             transactionDal.saveTransAction(transaction);
         }
